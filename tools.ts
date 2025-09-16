@@ -1,16 +1,14 @@
-import { z } from "zod";
 import { tool } from "ai";
 import { simpleGit } from "simple-git";
+import { z } from "zod";
+
+const excludeFiles = ["dist", "bun.lock"];
 
 const fileChange = z.object({
   rootDir: z.string().min(1).describe("The root directory"),
 });
 
 type FileChange = z.infer<typeof fileChange>;
-
-
-
-const excludeFiles = ["dist", "bun.lock"];
 
 async function getFileChangesInDirectory({ rootDir }: FileChange) {
   const git = simpleGit(rootDir);
@@ -26,9 +24,8 @@ async function getFileChangesInDirectory({ rootDir }: FileChange) {
   return diffs;
 }
 
-
 export const getFileChangesInDirectoryTool = tool({
-    description: "Gets the code changes made in given directory",
-    inputSchema: fileChange,
-    execute: getFileChangesInDirectory,
-  });
+  description: "Gets the code changes made in given directory",
+  inputSchema: fileChange,
+  execute: getFileChangesInDirectory,
+});
